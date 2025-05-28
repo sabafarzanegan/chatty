@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
+import { toast } from "sonner";
+import { any } from "zod";
 
 type Store = {
   authUser: {
@@ -56,12 +58,24 @@ export const useAuthStore = create<Store>()((set) => ({
       console.log(res.data);
 
       return res.data;
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
-      return { success: false, message: "signup failed" };
+      return { success: false, message: error.response.data.message };
     }
   },
-  logOut: () => {},
+  logOut: async () => {
+    try {
+      const res = await axiosInstance.post("/auth/logout");
+      set({ authUser: null });
+      console.log(res);
+
+      toast.success("Logged out successfully");
+    } catch (error: any) {
+      console.log(error);
+
+      toast.error(error.response.data.message);
+    }
+  },
   login: () => {},
   updateProfile: () => {},
 }));
