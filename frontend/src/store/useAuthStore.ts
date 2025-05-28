@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import { toast } from "sonner";
-import { any } from "zod";
 
 type Store = {
   authUser: {
@@ -23,7 +22,10 @@ type Store = {
     password: string;
   }) => Promise<{ success: boolean; message: string }>;
   logOut: () => void;
-  login: (data: { email: string; password: string }) => void;
+  login: (data: {
+    email: string;
+    password: string;
+  }) => Promise<{ success: boolean; message: string }>;
   updateProfile: (data: { profilePic: string }) => void;
 };
 
@@ -76,6 +78,16 @@ export const useAuthStore = create<Store>()((set) => ({
       toast.error(error.response.data.message);
     }
   },
-  login: () => {},
+  login: async (data) => {
+    try {
+      const res = await axiosInstance.post("/auth/login", data);
+      set({ authUser: res.data });
+      toast.success("login successfully");
+      return { success: true, message: "login successfully" };
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+      return { success: false, message: "login failed" };
+    }
+  },
   updateProfile: () => {},
 }));
