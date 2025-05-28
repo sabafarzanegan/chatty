@@ -7,6 +7,7 @@ import Signup from "./pages/Signup";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "./store/useAuthStore";
 import { Toaster } from "sonner";
+import Navbar from "./components/Navbar";
 
 function App() {
   const { checkAuth, isCheckingAuth, authUser } = useAuthStore();
@@ -14,17 +15,17 @@ function App() {
     queryKey: ["user"],
     queryFn: checkAuth,
   });
-  console.log(authUser);
 
   if (!authUser && isCheckingAuth) {
     return (
       <div className="w-full h-svh grid place-content-center">
-        <span className="loading loading-ring loading-xl"></span>
+        <span className="loading loading-bars loading-xl"></span>
       </div>
     );
   }
   return (
-    <div data-theme="">
+    <div data-theme="" className="container px-2 mx-auto">
+      <Navbar />
       <Routes>
         <Route
           path="/"
@@ -34,10 +35,7 @@ function App() {
           path="/profile"
           element={authUser ? <Profile /> : <Navigate to="/login" />}
         />
-        <Route
-          path="/setting"
-          element={authUser ? <Setting /> : <Navigate to="/login" />}
-        />
+        <Route path="/setting" element={<Setting />} />
         <Route path="/login" element={authUser ? <Home /> : <Login />} />
         <Route path="/Signup" element={authUser ? <Home /> : <Signup />} />
       </Routes>
