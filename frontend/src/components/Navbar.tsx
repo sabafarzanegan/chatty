@@ -35,11 +35,9 @@ function Navbar() {
                   <div className="text-lg">Profile</div>
                 </Link>
               </button>
-              <button className="btn btn-soft btn-error">
-                <Link to="/setting" className="flex items-center gap-x-2">
-                  <Logout size="20" className="text-base mt-1" />
-                  <div className="text-lg">Logout</div>
-                </Link>
+              <button onClick={logOut} className="btn btn-soft btn-error">
+                <Logout size="20" className="text-base mt-1" />
+                <div className="text-lg">Logout</div>
               </button>
             </>
           ) : (

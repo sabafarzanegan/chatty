@@ -42,7 +42,7 @@ function App() {
         <Route path="/login" element={authUser ? <Home /> : <Login />} />
         <Route path="/Signup" element={authUser ? <Home /> : <Signup />} />
       </Routes>
-      <Toaster />
+      <Toaster duration={2000} />
     </div>
   );
 }
