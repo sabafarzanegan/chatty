@@ -8,7 +8,7 @@ type Store = {
     email: string;
     fullName: string;
     profilePic: string | undefined;
-    updatedAt: Date;
+    updatedAt: string;
     __v: number;
     _id: string;
   } | null;
@@ -26,7 +26,7 @@ type Store = {
     email: string;
     password: string;
   }) => Promise<{ success: boolean; message: string }>;
-  updateProfile: (data: { profilePic: string }) => void;
+  updateProfile: ({ profilePic }: { profilePic: string }) => void;
 };
 
 export const useAuthStore = create<Store>()((set) => ({
@@ -90,5 +90,30 @@ export const useAuthStore = create<Store>()((set) => ({
       return { success: false, message: "login failed" };
     }
   },
-  updateProfile: () => {},
+  // updateProfile: async (data) => {
+  //   try {
+  //     set({ isUpdatingProfile: true });
+  //     const res = await axiosInstance.post("/auth/update-profile", data);
+  //     set({ authUser: res.data });
+  //     toast.success("image was changed successfully");
+  //   } catch (error: any) {
+  //     console.log(error);
+  //     toast.error(error.response.data.message);
+  //   } finally {
+  //     set({ isUpdatingProfile: false });
+  //   }
+  // },
+  updateProfile: async (data) => {
+    set({ isUpdatingProfile: true });
+    try {
+      const res = await axiosInstance.put("/auth/update-profile", data);
+      set({ authUser: res.data });
+      toast.success("Profile updated successfully");
+    } catch (error: any) {
+      console.log("error in update profile:", error);
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isUpdatingProfile: false });
+    }
+  },
 }));
