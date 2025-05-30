@@ -9,7 +9,7 @@ function Navbar() {
   const [isShowNav, setIsShowNav] = useState<boolean>(false);
   return (
     <>
-      <header className="py-8 sticky top-0 flex items-center  justify-between">
+      <header className="py-8  flex items-center  justify-between">
         <Logo />
 
         <button
