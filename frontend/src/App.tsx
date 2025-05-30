@@ -8,9 +8,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "./store/useAuthStore";
 import { Toaster } from "sonner";
 import Navbar from "./components/Navbar";
+import { useThemeStore } from "./store/useThemeStore";
 
 function App() {
   const { checkAuth, isCheckingAuth, authUser } = useAuthStore();
+  const { theme } = useThemeStore();
   useQuery({
     queryKey: ["user"],
     queryFn: checkAuth,
@@ -24,7 +26,7 @@ function App() {
     );
   }
   return (
-    <div data-theme="" className="container px-2 mx-auto">
+    <div data-theme={theme} className=" h-full  mx-auto">
       <Navbar />
       <Routes>
         <Route
