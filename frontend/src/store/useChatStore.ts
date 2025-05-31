@@ -15,9 +15,28 @@ type chatStoreType = {
     __v: number;
     _id: string;
   }[];
-  selectedUser: null;
+  selectedUser: {
+    createdAt: Date;
+    email: string;
+    fullName: string;
+    profilePic: string | undefined;
+    updatedAt: string;
+    __v: number;
+    _id: string;
+  } | null;
   getUsers: () => void;
   getMessages: () => void;
+  setSelectedUser: (
+    user: {
+      createdAt: Date;
+      email: string;
+      fullName: string;
+      profilePic: string | undefined;
+      updatedAt: string;
+      __v: number;
+      _id: string;
+    } | null
+  ) => void;
 };
 
 export const useChatStore = create<chatStoreType>()((set) => ({
@@ -33,4 +52,5 @@ export const useChatStore = create<chatStoreType>()((set) => ({
     }
   },
   getMessages: () => {},
+  setSelectedUser: (selectedUser) => set({ selectedUser }),
 }));
