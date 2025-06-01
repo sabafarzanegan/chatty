@@ -8,9 +8,6 @@ const Sidebar = () => {
 
   //   const { onlineUsers } = useAuthStore();
 
-  useEffect(() => {
-    getUsers();
-  }, [getUsers]);
   useQuery({
     queryKey: ["users"],
     queryFn: getUsers,
