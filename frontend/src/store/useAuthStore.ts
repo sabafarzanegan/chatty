@@ -110,7 +110,7 @@ export const useAuthStore = create<Store>()((set, get) => ({
     const { authUser } = get();
     if (!authUser || get().socket?.connected) return;
 
-    const socket = io(import.meta.env.BASE_URL_BACKEND, {
+    const socket = io("http://localhost:5001", {
       query: {
         userId: authUser._id,
       },

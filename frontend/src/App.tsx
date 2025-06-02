@@ -13,6 +13,7 @@ import { useThemeStore } from "./store/useThemeStore";
 function App() {
   const { checkAuth, isCheckingAuth, authUser } = useAuthStore();
   const { theme } = useThemeStore();
+
   useQuery({
     queryKey: ["user"],
     queryFn: checkAuth,
