@@ -1,20 +1,13 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import { toast } from "sonner";
-
+import type { User } from "../types";
+import { io } from "socket.io-client";
 type Store = {
-  authUser: {
-    createdAt: Date;
-    email: string;
-    fullName: string;
-    profilePic: string | undefined;
-    updatedAt: string;
-    __v: number;
-    _id: string;
-  } | null;
+  authUser: User | null;
   isCheckingAuth: boolean;
-
   isUpdatingProfile: boolean;
+  onlineUsers: { userId: string } | null;
   checkAuth: () => void;
   signUp: (data: {
     fullName: string;
@@ -27,10 +20,15 @@ type Store = {
     password: string;
   }) => Promise<{ success: boolean; message: string }>;
   updateProfile: ({ profilePic }: { profilePic: string }) => void;
+  connectSocket: () => void;
+  disConnectSocket: () => void;
+  socket: any;
 };
 
-export const useAuthStore = create<Store>()((set) => ({
+export const useAuthStore = create<Store>()((set, get) => ({
   authUser: null,
+  socket: null,
+  onlineUsers: null,
   isCheckingAuth: true,
   isUpdatingProfile: false,
   checkAuth: async () => {
@@ -40,6 +38,7 @@ export const useAuthStore = create<Store>()((set) => ({
       if (!res.data) {
         return null;
       }
+      get().connectSocket();
       return res.data;
     } catch (error) {
       console.log("error in checking user");
@@ -57,6 +56,8 @@ export const useAuthStore = create<Store>()((set) => ({
       if (res.data) {
         return { success: true, message: "signup successfully" };
       }
+      get().connectSocket();
+
       console.log(res.data);
 
       return res.data;
@@ -84,25 +85,14 @@ export const useAuthStore = create<Store>()((set) => ({
       const res = await axiosInstance.post("/auth/login", data);
       set({ authUser: res.data });
       toast.success("login successfully");
+      get().disConnectSocket();
       return { success: true, message: "login successfully" };
     } catch (error: any) {
       toast.error(error.response.data.message);
       return { success: false, message: "login failed" };
     }
   },
-  // updateProfile: async (data) => {
-  //   try {
-  //     set({ isUpdatingProfile: true });
-  //     const res = await axiosInstance.post("/auth/update-profile", data);
-  //     set({ authUser: res.data });
-  //     toast.success("image was changed successfully");
-  //   } catch (error: any) {
-  //     console.log(error);
-  //     toast.error(error.response.data.message);
-  //   } finally {
-  //     set({ isUpdatingProfile: false });
-  //   }
-  // },
+
   updateProfile: async (data) => {
     set({ isUpdatingProfile: true });
     try {
@@ -115,5 +105,25 @@ export const useAuthStore = create<Store>()((set) => ({
     } finally {
       set({ isUpdatingProfile: false });
     }
+  },
+  connectSocket: () => {
+    const { authUser } = get();
+    if (!authUser || get().socket?.connected) return;
+
+    const socket = io("http://localhost:5001", {
+      query: {
+        userId: authUser._id,
+      },
+    });
+    socket.connect();
+
+    set({ socket: socket });
+
+    socket.on("getOnlineUsers", (userIds) => {
+      set({ onlineUsers: userIds });
+    });
+  },
+  disConnectSocket: () => {
+    if (get().socket?.connected) get().socket.disconnect();
   },
 }));

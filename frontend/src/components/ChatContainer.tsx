@@ -4,11 +4,17 @@ import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 import MessageSkeleton from "./MessageSkeleton";
 import { useAuthStore } from "../store/useAuthStore";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { formatMessageTime } from "../types";
 
 function ChatContainer() {
-  const { messages, getMessages, selectedUser } = useChatStore();
+  const {
+    messages,
+    getMessages,
+    selectedUser,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  } = useChatStore();
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
   const { isPending } = useQuery({
@@ -16,6 +22,16 @@ function ChatContainer() {
     queryFn: () => getMessages(selectedUser?._id),
     enabled: !!selectedUser?._id,
   });
+
+  useEffect(() => {
+    subscribeToMessages();
+    return () => unsubscribeFromMessages();
+  }, [
+    selectedUser?._id,
+    getMessages,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  ]);
 
   if (isPending) {
     return (

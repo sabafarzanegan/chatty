@@ -22,6 +22,16 @@ export type MessageType = {
   __v: number;
 };
 
+export type User = {
+  createdAt: Date;
+  email: string;
+  fullName: string;
+  profilePic: string | undefined;
+  updatedAt: string;
+  __v: number;
+  _id: string;
+};
+
 export function formatMessageTime(date: string | Date) {
   return new Date(date).toLocaleTimeString("en-US", {
     hour: "2-digit",
