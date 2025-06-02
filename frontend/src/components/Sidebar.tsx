@@ -1,10 +1,11 @@
 import { useChatStore } from "../store/useChatStore";
 import { UserSearch } from "iconsax-reactjs";
 import { useQuery } from "@tanstack/react-query";
+import { useAuthStore } from "../store/useAuthStore";
 
 const Sidebar = () => {
   const { getUsers, users, setSelectedUser } = useChatStore();
-
+  const { onlineUsers } = useAuthStore();
   useQuery({
     queryKey: ["users"],
     queryFn: getUsers,
@@ -35,6 +36,12 @@ const Sidebar = () => {
                 alt={user.fullName}
                 className="size-12 object-cover rounded-full"
               />
+              {onlineUsers?.includes(user._id) && (
+                <span
+                  className="absolute bottom-0 right-0 size-3 bg-green-500 
+                  rounded-full ring-2 ring-zinc-900"
+                />
+              )}
             </div>
 
             <div className="hidden lg:block text-left min-w-0">
@@ -43,10 +50,6 @@ const Sidebar = () => {
             </div>
           </button>
         ))}
-
-        {users.length === 0 && (
-          <div className="text-center text-zinc-500 py-4">No online users</div>
-        )}
       </div>
     </aside>
   );

@@ -47,7 +47,7 @@ function Navbar() {
       </header>
       {/* mobile navbar */}
       <div
-        className={`md:hidden px-3 absolute top-0 left-0 w-[70%] min-h-screen bg-base-200 text-base-content transition-all duration-500 ${
+        className={`md:hidden px-3 absolute top-0 left-0 z-20 w-[70%] min-h-screen bg-base-200 text-base-content transition-all duration-500 ${
           isShowNav ? " translate-x-0" : "-translate-x-full"
         } `}>
         <ul className="space-y-6 py-6">

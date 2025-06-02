@@ -6,6 +6,7 @@ import MessageSkeleton from "./MessageSkeleton";
 import { useAuthStore } from "../store/useAuthStore";
 import { useEffect, useRef } from "react";
 import { formatMessageTime } from "../types";
+import { MessageSquare } from "iconsax-reactjs";
 
 function ChatContainer() {
   const {
@@ -46,6 +47,27 @@ function ChatContainer() {
     <div className="px-6 w-full flex flex-col flex-1">
       <ChatHeader />
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {!messages.length && (
+          <div className="max-w-md text-center space-y-6 mx-auto">
+            {/* Icon Display */}
+            <div className="flex justify-center gap-4 mb-4">
+              <div className="relative">
+                <div
+                  className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center
+                     justify-center animate-bounce">
+                  <MessageSquare className="w-8 h-8 text-primary " />
+                </div>
+              </div>
+            </div>
+
+            {/* Welcome Text */}
+            <h2 className="text-2xl font-bold">
+              {" "}
+              {`Welcome to chatt with ${selectedUser?.fullName} !`}
+            </h2>
+            <p className="text-base-content/60">start the chat</p>
+          </div>
+        )}
         {messages.map((message) => (
           <div
             key={message._id}

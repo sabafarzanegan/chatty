@@ -7,7 +7,7 @@ type Store = {
   authUser: User | null;
   isCheckingAuth: boolean;
   isUpdatingProfile: boolean;
-  onlineUsers: { userId: string } | null;
+  onlineUsers: string[] | null;
   checkAuth: () => void;
   signUp: (data: {
     fullName: string;
@@ -110,7 +110,7 @@ export const useAuthStore = create<Store>()((set, get) => ({
     const { authUser } = get();
     if (!authUser || get().socket?.connected) return;
 
-    const socket = io("http://localhost:5001", {
+    const socket = io(import.meta.env.BASE_URL_BACKEND, {
       query: {
         userId: authUser._id,
       },

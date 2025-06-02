@@ -26,7 +26,7 @@ function App() {
     );
   }
   return (
-    <div data-theme={theme} className=" h-full  mx-auto">
+    <div data-theme={theme} className=" h-full  mx-auto ">
       <Navbar />
       <Routes>
         <Route
