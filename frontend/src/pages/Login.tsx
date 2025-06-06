@@ -20,13 +20,14 @@ function Login() {
       password: "123456",
     },
   });
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending, error } = useMutation({
     mutationKey: ["signup"],
     mutationFn: (values: z.infer<typeof LoginFormValidation>) => login(values),
   });
   const onSubmit = async (values: z.infer<typeof LoginFormValidation>) => {
     console.log(values);
     mutate(values);
+    console.log(error);
   };
   return (
     <div className="w-full h-svh flex items-center justify-center">

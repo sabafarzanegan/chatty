@@ -110,7 +110,7 @@ export const useAuthStore = create<Store>()((set, get) => ({
     const { authUser } = get();
     if (!authUser || get().socket?.connected) return;
 
-    const socket = io("http://localhost:5001", {
+    const socket = io(import.meta.env.VITE_BASE_URL_SOCKET, {
       query: {
         userId: authUser._id,
       },
